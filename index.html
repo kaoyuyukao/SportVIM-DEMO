@@ -94,7 +94,20 @@
 
     .links a { display:inline-block; margin-right:12px; margin-top:12px; padding:10px 14px; border-radius:12px; background:#1b2735; color:var(--fg); text-decoration:none; border:1px solid #213245; }
     .links a:hover { background:#223449; }
-
+    
+    .abstract {
+      margin-top: 20px;
+      padding: 12px 16px;
+      background: #11151a;
+      border-radius: 12px;
+      color: #dbe3eb;
+      font-size: 14px;
+      line-height: 1.5;
+      text-align: justify;
+    }
+    .abstract b {
+      color: #ff7f50;
+    }
     footer { font-size: 12px; color: #8ea3b7; text-align: center; padding-bottom: 24px; }
   </style>
 </head>
@@ -117,6 +130,12 @@
     <aside class="list" id="videoList">
       <div id="videoListItems"></div>
     </aside>
+
+    <div class="abstract">
+      Maintaining identity consistency in sports broadcasts is challenging due to occlusions and irregular motion from random camera shifts. 
+      We propose <b>SportVIM</b>, a temporal- and visibility-aware framework with three modules: feature-guided association, temporal-aware fusion, and visibility-aware refinement. 
+      On the SportsMOT benchmark, SportVIM achieves <b>83.3% HOTA</b>, <b>96.9% MOTA</b>, <b>88.9% IDF1</b>, and <b>77.6% AssA</b>, demonstrating state-of-the-art robustness.
+    </div>
   </main>
 
   <footer>© 2025 SportVIM Demo</footer>
