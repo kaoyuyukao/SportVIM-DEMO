@@ -162,7 +162,7 @@
       color: #dbe3eb;
       font-size: 14px;
       line-height: 1.6;
-      text-align: justify;
+      text-align: center;
     }
     .panel-abstract b{ color:#ff7f50; }
 
@@ -348,25 +348,31 @@
     }
     
     function select(index) {
-      const v = VIDEOS[index];
-      const src = `https://player.vimeo.com/video/${v.id}?${PARAMS}`;
-      player.src = src;
-    
-      document.querySelectorAll('.item').forEach((el, i) => {
-        el.classList.toggle('active', i === index);
-        const act = el.querySelector('.actions');
-        const prv = el.querySelector('.preview');
-        if (i === index) {
-          act.style.display = 'flex';
-          prv.style.display = 'block';    // 顯示預覽圖
-        } else {
-          act.style.display = 'none';
-          prv.style.display = 'none';
-        }
-      });
-    
-      history.replaceState(null, '', `#/v/${v.id}`);
-    }
+        const v = VIDEOS[index];
+        const src = `https://player.vimeo.com/video/${v.id}?${PARAMS}`;
+        player.src = src;
+      
+        document.querySelectorAll('.item').forEach((el, i) => {
+          el.classList.toggle('active', i === index);
+          const act = el.querySelector('.actions');
+          const prv = el.querySelector('.preview');
+          if (i === index) {
+            act.style.display = 'flex';
+            prv.style.display = 'block';
+          } else {
+            act.style.display = 'none';
+            prv.style.display = 'none';
+          }
+        });
+  
+        const currentItem = document.querySelector(`.item[data-index="${index}"]`);
+        const actionsEl = currentItem.querySelector('.actions');
+        actionsEl.insertAdjacentElement('afterend', panelAbstract);
+        panelAbstract.style.display = 'block';
+      
+        history.replaceState(null, '', `#/v/${v.id}`);
+      }
+
         renderList(0);
 
     const m = location.hash.match(/#\/v\/(\d+)/);
