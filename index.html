@@ -1,0 +1,152 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>SportVIM Demo — Vimeo Gallery</title>
+
+  <!-- Social preview (可改 poster.jpg) -->
+  <meta property="og:title" content="SportVIM Demo — Vimeo Gallery" />
+  <meta property="og:description" content="Multi-Object Tracking in Sports Broadcasting — demo videos" />
+  <meta property="og:type" content="website" />
+  <meta property="og:image" content="assets/poster.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <style>
+    :root { --maxw: 1100px; --bg:#0b0c10; --card:#11151a; --fg:#eaf0f6; --muted:#9fb3c8; --accent:#00b2ff; }
+    * { box-sizing: border-box; }
+    body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, "Helvetica Neue", Arial; background: var(--bg); color: var(--fg); }
+    header, main, footer { max-width: var(--maxw); margin: 0 auto; padding: 16px; }
+    header h1 { margin: 20px 0 8px; font-size: 28px; }
+    header p { margin: 0 0 12px; color: #b8c4d2; }
+
+    .grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
+    @media (min-width: 900px) {
+      .grid { grid-template-columns: 2fr 1fr; }
+    }
+
+    .player-card { background: var(--card); border-radius: 16px; overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,.35); }
+    .ratio { position: relative; width: 100%; padding-top: 56.25%; /* 16:9 */ background:#0e1318; }
+    .ratio iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+
+    .note { font-size: 14px; color: var(--muted); margin: 10px 0 0; }
+
+    .list { background: var(--card); border-radius: 16px; padding: 12px; box-shadow: 0 10px 30px rgba(0,0,0,.25); }
+    .item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 12px; cursor:pointer; }
+    .item:hover { background: #17202a; }
+    .item.active { outline: 2px solid #213245; background:#16212b; }
+    .thumb { width: 56px; height: 32px; border-radius: 6px; overflow: hidden; background:#0e1318; display:flex; align-items:center; justify-content:center; font-size:12px; color:#789; }
+    .meta { display:flex; flex-direction:column; gap:2px; }
+    .title { font-weight:600; font-size:14px; }
+    .desc { font-size:12px; color: var(--muted); }
+
+    .links a { display:inline-block; margin-right:12px; margin-top:12px; padding:10px 14px; border-radius:12px; background:#1b2735; color:var(--fg); text-decoration:none; border:1px solid #213245; }
+    .links a:hover { background:#223449; }
+
+    footer { font-size: 12px; color: #8ea3b7; text-align: center; padding-bottom: 24px; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>SportVIM: Temporal & Visibility-Aware MOT — Demo Videos</h1>
+  </header>
+
+  <main class="grid">
+    <!-- Player column -->
+    <section class="player">
+      <div class="player-card">
+        <div class="ratio">
+          <iframe id="vimeoPlayer" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="Vimeo player"></iframe>
+        </div>
+      </div>
+      <div class="note">隱私模式：已啟用 <code>dnt=1</code>；關閉標題/作者列，並開啟循環播放、靜音自動播放。</div>
+      <div class="links">
+        <a id="openOnVimeo" href="#" target="_blank" rel="noopener">在 Vimeo 開啟目前影片</a>
+        <a id="copyLink" href="#">複製目前影片的分享連結</a>
+      </div>
+    </section>
+
+    <!-- List column -->
+    <aside class="list" id="videoList">
+    </aside>
+  </main>
+
+  <footer>© 2025 SportVIM Demo</footer>
+
+  <script>
+    const VIDEOS = [
+      { id: '1110812620', title: 'Demo 1', desc: '籃球員追蹤' },
+      { id: '1110812717', title: 'Demo 2', desc: '排球員追蹤' },
+      { id: '1110812657', title: 'Demo 3', desc: '足球員追蹤' },
+    ];
+
+    const PARAMS = 'autoplay=1&muted=1&loop=1&autopause=0&title=0&byline=0&portrait=0&dnt=1';
+
+    const player = document.getElementById('vimeoPlayer');
+    const listEl = document.getElementById('videoList');
+    const openOnVimeo = document.getElementById('openOnVimeo');
+    const copyLink = document.getElementById('copyLink');
+
+    function renderList(activeIndex = 0) {
+      listEl.innerHTML = '';
+      VIDEOS.forEach((v, i) => {
+        const item = document.createElement('div');
+        item.className = 'item' + (i === activeIndex ? ' active' : '');
+        item.dataset.index = i;
+
+        const thumb = document.createElement('div');
+        thumb.className = 'thumb';
+        // 嘗試用 vumbnail（基於 Vimeo 的無追蹤縮圖服務），若載不到仍會顯示 ID
+        const img = document.createElement('img');
+        img.loading = 'lazy';
+        img.alt = `thumb ${v.id}`;
+        img.width = 56; img.height = 32;
+        img.style.width = '100%'; img.style.height = '100%'; img.style.objectFit = 'cover';
+        img.onerror = () => { thumb.textContent = v.id; };
+        img.src = `https://vumbnail.com/${v.id}.jpg`;
+        thumb.appendChild(img);
+
+        const meta = document.createElement('div');
+        meta.className = 'meta';
+        const title = document.createElement('div');
+        title.className = 'title';
+        title.textContent = v.title || `Vimeo ${v.id}`;
+        const desc = document.createElement('div');
+        desc.className = 'desc';
+        desc.textContent = v.desc || '';
+        meta.appendChild(title);
+        meta.appendChild(desc);
+
+        item.appendChild(thumb);
+        item.appendChild(meta);
+        item.addEventListener('click', () => select(i));
+        listEl.appendChild(item);
+      });
+    }
+    function select(index) {
+      const v = VIDEOS[index];
+      const shareUrl = `${location.origin}${location.pathname}#/v/${v.id}`;
+      const src = `https://player.vimeo.com/video/${v.id}?${PARAMS}`;
+      player.src = src;
+      document.querySelectorAll('.item').forEach(el => el.classList.remove('active'));
+      const activeEl = document.querySelector(`.item[data-index="${index}"]`);
+      if (activeEl) activeEl.classList.add('active');
+
+      openOnVimeo.href = `https://vimeo.com/${v.id}`;
+      copyLink.onclick = (e) => {
+        e.preventDefault();
+        navigator.clipboard.writeText(shareUrl).then(() => {
+          copyLink.textContent = '已複製分享連結！';
+          setTimeout(() => copyLink.textContent = '複製目前影片的分享連結', 1500);
+        });
+      };
+      history.replaceState(null, '', `#/v/${v.id}`);
+    }
+    renderList(0);
+
+    const m = location.hash.match(/#\/v\/(\d+)/);
+    const idx = m ? VIDEOS.findIndex(v => String(v.id) === m[1]) : -1;
+    select(idx >= 0 ? idx : 0);
+  </script>
+</body>
+</html>
