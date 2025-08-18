@@ -163,6 +163,23 @@
       text-align: justify;
     }
     .panel-abstract b{ color:#ff7f50; }
+
+    .preview {
+      display: none;
+      margin-top: 10px;
+      border-radius: 10px;
+      overflow: hidden;
+      background: #0e1318;
+      box-shadow: 0 4px 14px rgba(0,0,0,.25);
+    }
+    
+    .preview img {
+      display: block;
+      width: 100%;
+      height: auto;
+      aspect-ratio: 16 / 9;
+      object-fit: cover;
+    }
     
     footer { font-size: 12px; color: #8ea3b7; text-align: center; padding-bottom: 24px; }
   </style>
@@ -218,10 +235,9 @@
         item.className = 'item' + (i === activeIndex ? ' active' : '');
         item.dataset.index = i;
     
-        // 主區：縮圖 + 文字
         const main = document.createElement('div');
         main.className = 'item-main';
-    
+        
         const thumb = document.createElement('div');
         thumb.className = 'thumb';
         const img = document.createElement('img');
@@ -246,8 +262,16 @@
     
         main.appendChild(thumb);
         main.appendChild(meta);
-    
-        // 下一行：按鈕列（預設隱藏）
+
+        const preview = document.createElement('div');
+        preview.className = 'preview';
+        
+        const pimg = document.createElement('img');
+        pimg.alt = `preview ${v.id}`;
+        pimg.loading = 'lazy';
+        pimg.src = v.thumb || `https://vumbnail.com/${v.id}.jpg`;
+        preview.appendChild(pimg);
+
         const actions = document.createElement('div');
         actions.className = 'actions';
     
@@ -256,7 +280,7 @@
         openBtn.href = `https://vimeo.com/${v.id}`;
         openBtn.target = '_blank';
         openBtn.rel = 'noopener';
-        openBtn.addEventListener('click', e => e.stopPropagation()); // 避免冒泡
+        openBtn.addEventListener('click', e => e.stopPropagation());
     
         const copyBtn = document.createElement('a');
         copyBtn.textContent = 'Copy Link';
@@ -275,6 +299,7 @@
         actions.appendChild(copyBtn);
     
         item.appendChild(main);
+        item.appendChild(preview);
         item.appendChild(actions);
     
         item.addEventListener('click', () => select(i));
@@ -290,13 +315,19 @@
       document.querySelectorAll('.item').forEach((el, i) => {
         el.classList.toggle('active', i === index);
         const act = el.querySelector('.actions');
-        act.style.display = (i === index) ? 'flex' : 'none';
+        const prv = el.querySelector('.preview');
+        if (i === index) {
+          act.style.display = 'flex';
+          prv.style.display = 'block';    // 顯示預覽圖
+        } else {
+          act.style.display = 'none';
+          prv.style.display = 'none';
+        }
       });
     
       history.replaceState(null, '', `#/v/${v.id}`);
     }
-
-    renderList(0);
+        renderList(0);
 
     const m = location.hash.match(/#\/v\/(\d+)/);
     const idx = m ? VIDEOS.findIndex(v => String(v.id) === m[1]) : -1;
