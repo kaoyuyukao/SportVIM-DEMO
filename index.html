@@ -61,16 +61,24 @@
       padding-bottom: 4px;
     }
     
-    .actions a {
+    .actions{
+      display: none;
+      margin-top: 8px;
+      display: flex;
+      gap: 12px;
+    }
+    
+    .actions a{
       display: inline-block;
-      padding: 10px 14px;
-      border-radius: 12px;
+      padding: 6px 10px;
+      border-radius: 8px;
       background: #1b2735;
       color: var(--fg);
       text-decoration: none;
       border: 1px solid #213245;
+      font-size: 13px;
     }
-    .actions a:hover { background:#223449; }
+    .actions a:hover{ background:#223449; }
     .item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 12px; cursor:pointer; }
     .item:hover { background: #17202a; }
     .item.active { outline: 2px solid #213245; background:#16212b; }
@@ -103,10 +111,6 @@
     <!-- List column -->
     <aside class="list" id="videoList">
       <div id="videoListItems"></div>
-      <div class="actions">
-        <a id="openOnVimeo" href="#" target="_blank" rel="noopener">Open in Vimeo.com</a>
-        <a id="copyLink" href="#">Copy Link</a>
-      </div>
     </aside>
   </main>
 
@@ -132,7 +136,7 @@
         const item = document.createElement('div');
         item.className = 'item' + (i === activeIndex ? ' active' : '');
         item.dataset.index = i;
-
+    
         const thumb = document.createElement('div');
         thumb.className = 'thumb';
         const img = document.createElement('img');
@@ -143,7 +147,7 @@
         img.onerror = () => { thumb.textContent = v.id; };
         img.src = `https://vumbnail.com/${v.id}.jpg`;
         thumb.appendChild(img);
-
+    
         const meta = document.createElement('div');
         meta.className = 'meta';
         const title = document.createElement('div');
@@ -154,32 +158,59 @@
         desc.textContent = v.desc || '';
         meta.appendChild(title);
         meta.appendChild(desc);
-
+    
+        // 新增 actions 區塊
+        const actions = document.createElement('div');
+        actions.className = 'actions';
+        const openBtn = document.createElement('a');
+        openBtn.textContent = 'Open in Vimeo.com';
+        openBtn.href = `https://vimeo.com/${v.id}`;
+        openBtn.target = '_blank';
+        openBtn.rel = 'noopener';
+    
+        const copyBtn = document.createElement('a');
+        copyBtn.textContent = 'Copy Link';
+        copyBtn.href = '#';
+        copyBtn.addEventListener('click', e => {
+          e.preventDefault();
+          const shareUrl = `${location.origin}${location.pathname}#/v/${v.id}`;
+          navigator.clipboard.writeText(shareUrl).then(() => {
+            copyBtn.textContent = 'Copied!';
+            setTimeout(() => copyBtn.textContent = 'Copy Link', 1500);
+          });
+        });
+    
+        actions.appendChild(openBtn);
+        actions.appendChild(copyBtn);
+    
         item.appendChild(thumb);
         item.appendChild(meta);
+        item.appendChild(actions);
+    
         item.addEventListener('click', () => select(i));
         listEl.appendChild(item);
       });
     }
+
     function select(index) {
       const v = VIDEOS[index];
-      const shareUrl = `${location.origin}${location.pathname}#/v/${v.id}`;
       const src = `https://player.vimeo.com/video/${v.id}?${PARAMS}`;
       player.src = src;
-      document.querySelectorAll('.item').forEach(el => el.classList.remove('active'));
-      const activeEl = document.querySelector(`.item[data-index="${index}"]`);
-      if (activeEl) activeEl.classList.add('active');
-
-      openOnVimeo.href = `https://vimeo.com/${v.id}`;
-      copyLink.onclick = (e) => {
-        e.preventDefault();
-        navigator.clipboard.writeText(shareUrl).then(() => {
-          copyLink.textContent = 'Copied！';
-          setTimeout(() => copyLink.textContent = 'Copy Link', 1500);
-        });
-      };
+    
+      document.querySelectorAll('.item').forEach((el, i) => {
+        el.classList.remove('active');
+        const act = el.querySelector('.actions');
+        if (i === index) {
+          el.classList.add('active');
+          act.style.display = 'flex';
+        } else {
+          act.style.display = 'none';
+        }
+      });
+    
       history.replaceState(null, '', `#/v/${v.id}`);
     }
+
     renderList(0);
 
     const m = location.hash.match(/#\/v\/(\d+)/);
