@@ -59,10 +59,9 @@
           <iframe id="vimeoPlayer" allow="autoplay; fullscreen; picture-in-picture" allowfullscreen referrerpolicy="no-referrer-when-downgrade" title="Vimeo player"></iframe>
         </div>
       </div>
-      <div class="note">隱私模式：已啟用 <code>dnt=1</code>；關閉標題/作者列，並開啟循環播放、靜音自動播放。</div>
       <div class="links">
-        <a id="openOnVimeo" href="#" target="_blank" rel="noopener">在 Vimeo 開啟目前影片</a>
-        <a id="copyLink" href="#">複製目前影片的分享連結</a>
+        <a id="openOnVimeo" href="#" target="_blank" rel="noopener">Open in Vimeo.com</a>
+        <a id="copyLink" href="#">Copy Link</a>
       </div>
     </section>
 
@@ -75,9 +74,9 @@
 
   <script>
     const VIDEOS = [
-      { id: '1110812620', title: 'Demo 1', desc: '籃球員追蹤' },
-      { id: '1110812717', title: 'Demo 2', desc: '排球員追蹤' },
-      { id: '1110812657', title: 'Demo 3', desc: '足球員追蹤' },
+      { id: '1110812620', title: 'Demo 1', desc: 'Basketball Player Tracking' },
+      { id: '1110812717', title: 'Demo 2', desc: 'Volleyball Player Tracking' },
+      { id: '1110812657', title: 'Demo 3', desc: 'Football Player Tracking' },
     ];
 
     const PARAMS = 'autoplay=1&muted=1&loop=1&autopause=0&title=0&byline=0&portrait=0&dnt=1';
@@ -96,7 +95,6 @@
 
         const thumb = document.createElement('div');
         thumb.className = 'thumb';
-        // 嘗試用 vumbnail（基於 Vimeo 的無追蹤縮圖服務），若載不到仍會顯示 ID
         const img = document.createElement('img');
         img.loading = 'lazy';
         img.alt = `thumb ${v.id}`;
@@ -136,8 +134,8 @@
       copyLink.onclick = (e) => {
         e.preventDefault();
         navigator.clipboard.writeText(shareUrl).then(() => {
-          copyLink.textContent = '已複製分享連結！';
-          setTimeout(() => copyLink.textContent = '複製目前影片的分享連結', 1500);
+          copyLink.textContent = 'Copied！';
+          setTimeout(() => copyLink.textContent = 'Copy Link', 1500);
         });
       };
       history.replaceState(null, '', `#/v/${v.id}`);
