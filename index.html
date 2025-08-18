@@ -63,25 +63,34 @@
     
     .actions{
       display: none;
-      margin-top: 8px;
-      display: flex;
+      margin-top: 10px;
       gap: 12px;
     }
-    
+        
     .actions a{
-      display: inline-block;
-      padding: 6px 10px;
-      border-radius: 8px;
-      background: #1b2735;
-      color: var(--fg);
-      text-decoration: none;
-      border: 1px solid #213245;
-      font-size: 13px;
+      display:inline-block;
+      padding:10px 14px;
+      border-radius:12px;
+      background:#1b2735;
+      color:var(--fg);
+      text-decoration:none;
+      border:1px solid #213245;
     }
     .actions a:hover{ background:#223449; }
-    .item { display: flex; align-items: center; gap: 12px; padding: 10px; border-radius: 12px; cursor:pointer; }
-    .item:hover { background: #17202a; }
-    .item.active { outline: 2px solid #213245; background:#16212b; }
+    
+    .item{
+      display: block;
+      padding: 10px;
+      border-radius: 12px;
+      cursor: pointer;
+    }
+    .item:hover{ background:#17202a; }
+    .item.active{ outline:2px solid #213245; background:#16212b; }
+    .item-main{
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
     .thumb { width: 56px; height: 32px; border-radius: 6px; overflow: hidden; background:#0e1318; display:flex; align-items:center; justify-content:center; font-size:12px; color:#789; }
     .meta { display:flex; flex-direction:column; gap:2px; }
     .title { font-weight:600; font-size:14px; }
@@ -137,6 +146,10 @@
         item.className = 'item' + (i === activeIndex ? ' active' : '');
         item.dataset.index = i;
     
+        // 主區：縮圖 + 文字
+        const main = document.createElement('div');
+        main.className = 'item-main';
+    
         const thumb = document.createElement('div');
         thumb.className = 'thumb';
         const img = document.createElement('img');
@@ -159,20 +172,26 @@
         meta.appendChild(title);
         meta.appendChild(desc);
     
-        // 新增 actions 區塊
+        main.appendChild(thumb);
+        main.appendChild(meta);
+    
+        // 下一行：按鈕列（預設隱藏）
         const actions = document.createElement('div');
         actions.className = 'actions';
+    
         const openBtn = document.createElement('a');
         openBtn.textContent = 'Open in Vimeo.com';
         openBtn.href = `https://vimeo.com/${v.id}`;
         openBtn.target = '_blank';
         openBtn.rel = 'noopener';
+        openBtn.addEventListener('click', e => e.stopPropagation()); // 避免冒泡
     
         const copyBtn = document.createElement('a');
         copyBtn.textContent = 'Copy Link';
         copyBtn.href = '#';
         copyBtn.addEventListener('click', e => {
           e.preventDefault();
+          e.stopPropagation();
           const shareUrl = `${location.origin}${location.pathname}#/v/${v.id}`;
           navigator.clipboard.writeText(shareUrl).then(() => {
             copyBtn.textContent = 'Copied!';
@@ -183,29 +202,23 @@
         actions.appendChild(openBtn);
         actions.appendChild(copyBtn);
     
-        item.appendChild(thumb);
-        item.appendChild(meta);
+        item.appendChild(main);
         item.appendChild(actions);
     
         item.addEventListener('click', () => select(i));
         listEl.appendChild(item);
       });
     }
-
+    
     function select(index) {
       const v = VIDEOS[index];
       const src = `https://player.vimeo.com/video/${v.id}?${PARAMS}`;
       player.src = src;
     
       document.querySelectorAll('.item').forEach((el, i) => {
-        el.classList.remove('active');
+        el.classList.toggle('active', i === index);
         const act = el.querySelector('.actions');
-        if (i === index) {
-          el.classList.add('active');
-          act.style.display = 'flex';
-        } else {
-          act.style.display = 'none';
-        }
+        act.style.display = (i === index) ? 'flex' : 'none';
       });
     
       history.replaceState(null, '', `#/v/${v.id}`);
