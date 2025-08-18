@@ -16,8 +16,15 @@
     * { box-sizing: border-box; }
     body { margin:0; font-family: system-ui, -apple-system, Segoe UI, Roboto, Noto Sans, "Helvetica Neue", Arial; background: var(--bg); color: var(--fg); }
     header, main, footer { max-width: var(--maxw); margin: 0 auto; padding: 16px; }
-    header h1 { margin: 20px 0 8px; font-size: 28px; }
-    header p { margin: 0 0 12px; color: #b8c4d2; }
+    header h1 {
+      margin: 20px 0 8px;
+      font-size: 28px;
+      text-align: center;
+    }
+    header p { 
+      margin: 0 0 12px;
+      color: #b8c4d2;
+    }
 
     .grid { display: grid; grid-template-columns: 1fr; gap: 16px; }
     @media (min-width: 900px) {
