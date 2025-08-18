@@ -50,7 +50,7 @@
     .ratio { 
       position: relative;
       width: 100%;
-      padding-top: 65%;;
+      padding-top: 56.24%;;
       /* 16:9 */ background:#0e1318;
     }
     
@@ -78,9 +78,9 @@
     }
 
     #videoListItems{
-      flex: 1;
       overflow: auto;
       padding-bottom: 8px;
+      max-height: calc(100vh - 360px);
     }
     
     .actions {
@@ -153,14 +153,15 @@
     .links a:hover { background:#223449; }
     
     .panel-abstract{
-      margin-top: 12px;
-      padding: 12px;
+      margin: 12px auto 0;
+      padding: 12px 16px;
+      max-width: 520px;
       background: #11151a;
       border: 1px solid #213245;
       border-radius: 12px;
       color: #dbe3eb;
-      font-size: 13px;
-      line-height: 1.55;
+      font-size: 14px;
+      line-height: 1.6;
       text-align: justify;
     }
     .panel-abstract b{ color:#ff7f50; }
