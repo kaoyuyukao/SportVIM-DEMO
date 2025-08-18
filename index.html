@@ -153,7 +153,7 @@
     .links a:hover { background:#223449; }
     
     .panel-abstract{
-      margin: 12px auto 0;
+      margin: 16px auto 0;
       padding: 12px 16px;
       max-width: 520px;
       background: #11151a;
@@ -165,6 +165,7 @@
       text-align: center;
     }
     .panel-abstract b{ color:#ff7f50; }
+    .global-abstract{ max-width: var(--maxw); }
 
     .preview{
       display: none;
@@ -221,16 +222,17 @@
     <!-- List column -->
     <aside class="list" id="videoList">
       <div id="videoListItems"></div>
-      <div id="panelAbstract" class="panel-abstract" style="display:none">
-        Maintaining identity consistency in sports broadcasts is challenging due to occlusions and irregular motion from random camera shifts.
-        We propose <b>SportVIM</b>, a temporal- and visibility-aware framework with three modules:
-        feature-guided association, temporal-aware fusion, and visibility-aware refinement.
-        On the SportsMOT benchmark, SportVIM achieves <b>83.3% HOTA</b>, <b>96.9% MOTA</b>, <b>88.9% IDF1</b>, and <b>77.6% AssA</b>,
-        demonstrating state-of-the-art robustness.
-      </div>
     </aside>
   </main>
-
+  
+  <section class="panel-abstract global-abstract">
+    Maintaining identity consistency in sports broadcasts is challenging due to occlusions and irregular motion from random camera shifts.
+    We propose <b>SportVIM</b>, a temporal- and visibility-aware framework with three modules:
+    feature-guided association, temporal-aware fusion, and visibility-aware refinement.
+    On the SportsMOT benchmark, SportVIM achieves <b>83.3% HOTA</b>, <b>96.9% MOTA</b>, <b>88.9% IDF1</b>, and <b>77.6% AssA</b>,
+    demonstrating state-of-the-art robustness.
+  </section>
+  
   <footer>© 2025 SportVIM Demo</footer>
 
   <script>
@@ -366,12 +368,12 @@
         }
       });
     
-      const currentItem = document.querySelector(`.item[data-index="${index}"]`);
-      const actionsEl   = currentItem?.querySelector('.actions');
-      if (actionsEl && panelAbstract) {
-        actionsEl.insertAdjacentElement('afterend', panelAbstract);
-        panelAbstract.style.display = 'block';
-      }
+      // const currentItem = document.querySelector(`.item[data-index="${index}"]`);
+      // const actionsEl   = currentItem?.querySelector('.actions');
+      // if (actionsEl && panelAbstract) {
+      //   actionsEl.insertAdjacentElement('afterend', panelAbstract);
+      //   panelAbstract.style.display = 'block';
+      // }
     
       history.replaceState(null, '', `#/v/${v.id}`);
     }
