@@ -12,7 +12,7 @@
   <meta name="twitter:card" content="summary_large_image" />
 
   <style>
-    :root { --maxw: 1100px; --bg:#0b0c10; --card:#11151a; --fg:#eaf0f6; --muted:#9fb3c8; --accent:#00b2ff; }
+    :root { --maxw: 1400px; --bg:#0b0c10; --card:#11151a; --fg:#eaf0f6; --muted:#9fb3c8; --accent:#00b2ff; }
     * { box-sizing: border-box; }
     body { 
       margin:0;
@@ -37,7 +37,8 @@
     }
     
     @media (min-width: 900px) {
-      .grid { grid-template-columns: 2fr 1fr; }
+      .grid { grid-template-columns: 3.5fr 1fr; }
+      .grid { gap: 16px; }
     }
     .player-card { 
       background: var(--card);
@@ -48,8 +49,8 @@
     
     .ratio { 
       position: relative;
-      width: 110%;
-      padding-top: 65%;;
+      width: 100%;
+      padding-top: 56.25%;;
       /* 16:9 */ background:#0e1318;
     }
     
