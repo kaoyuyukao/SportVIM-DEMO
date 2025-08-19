@@ -231,6 +231,16 @@
     feature-guided association, temporal-aware fusion, and visibility-aware refinement.
     On the SportsMOT benchmark, SportVIM achieves <b>83.3% HOTA</b>, <b>96.9% MOTA</b>, <b>88.9% IDF1</b>, and <b>77.6% AssA</b>,
     demonstrating state-of-the-art robustness.
+    
+    <br><br>
+    <b>Case studies:</b><br>
+    (a) <i>Basketball with heavy occlusion:</i> When ID&nbsp;1 is partially blocked by another player, traditional tracking produces mismatches. 
+    SportVIM leverages joint visual and positional cues to maintain correct identity links.<br>
+    (b) <i>Soccer with rapid camera movement:</i> During sudden pans, players such as IDs&nbsp;6, 17, and 9 leave and re-enter the frame. 
+    SportVIM adapts to outdated features and preserves their identities upon return.<br>
+    (c) <i>Volleyball with severe overlap:</i> Multiple players (IDs&nbsp;4, 5, and 6) become indistinguishable when clustered together. 
+    SportVIM adjusts feature updates based on visibility, preventing drift and ensuring stable recognition.
+    
     <br><br>
     <i>Corresponding author:</i> Prof. Cheng-Hung Lin (brucelin@ntnu.edu.tw)<br>
     <i>Authors:</i> Yu-Yung Kao and Po-Yung Chou
